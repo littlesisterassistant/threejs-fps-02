@@ -115,11 +115,6 @@ scene.add(bombLight);
 const playerShootables = world.shootables.concat(bots.hitMeshes);
 const botShootables = world.shootables.concat([playerTorso, playerHead], bots.hitMeshes);
 
-// Shot log for headless debugging: what each player shot hit first.
-const shotLog = [];
-// Debug handle for headless probing (positions, raycasts). Harmless in play.
-window.__ember = { scene, camera, bots, body: player.state, game, weapon, raycaster, shotLog, get playerHp() { return playerHp; }, get score() { return score; } };
-
 const body = player.state;
 let playerHp = 100;
 let playerAlive = true;
@@ -210,7 +205,6 @@ function shootPlayer() {
   raycaster.set(camera.position, direction);
   const hits = raycaster.intersectObjects(playerShootables, false);
   const hit = hits[0];
-  shotLog.push(hit ? (hit.object.userData.bot ? `${hit.object.userData.bot.name}/${hit.object.userData.part}` : `world@${hit.distance.toFixed(1)}m`) : 'none');
   const end = hit ? hit.point : tmpVec.copy(camera.position).addScaledVector(direction, 70);
   showTracer(camera.position, end);
   audio.shot(def.key);
